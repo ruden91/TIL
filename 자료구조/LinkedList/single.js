@@ -1,3 +1,11 @@
+/**
+ * 단순 연결리스트
+ * 탐색 시간복잡도 O(n)
+ * 삽입 시간복잡도 O(n)
+ * 제거 시간복잡도 O(n)
+ * 탐색, 삽입, 제거 모두 해당 동작 이전에 특정 노드 탐색을 실시하기 때문에 O(n)
+ * 단, head 바로 앞쪽에 데이터를 삽입할 경우 O(1)
+ */
 class SinglelyLinkedList {
   constructor() {
     this.head = null;
