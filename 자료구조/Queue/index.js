@@ -34,4 +34,4 @@ q.enqueue(4);
 
 q.dequeue();
 
-q.printQueue();
+module.exports = Queue;

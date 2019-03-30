@@ -1,3 +1,5 @@
+const Queue = require('../Queue');
+
 class Graph {
   constructor(size) {
     // size, adjacent list 초기섲렁
@@ -27,14 +29,23 @@ class Graph {
     }
   }
 
+  // 너비 우선 탐색
   bfs(startingNode) {
-    // create visited Array
-    const visited = [];
-    for (let i = 0; i < this.size; i++) {
-      visited.push(false)
+    const q = new Queue();
+    let explored = new Set();
+    
+    q.enqueue(startingNode);
+    explored.add(startingNode);
+
+    while(!q.isEmpty()) {
+      const t = q.dequeue();
+      this.adjList.get(t).filter(n => !explored.has(n)).forEach(n => {
+        explored.add(n);
+        q.enqueue(n);
+      })
     }
 
-    console.log(visited);
+    console.log(explored)
   }
 
   dfs(startingNode) {
