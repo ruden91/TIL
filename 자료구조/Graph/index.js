@@ -26,6 +26,20 @@ class Graph {
       console.log(`${key} -> ${connectedValues}`);
     }
   }
+
+  bfs(startingNode) {
+    // create visited Array
+    const visited = [];
+    for (let i = 0; i < this.size; i++) {
+      visited.push(false)
+    }
+
+    console.log(visited);
+  }
+
+  dfs(startingNode) {
+
+  }
 }
 
 const vertices = [ 'A', 'B', 'C', 'D', 'E', 'F' ]; 
@@ -46,4 +60,5 @@ g.addEdge('E', 'F');
 g.addEdge('E', 'C'); 
 g.addEdge('C', 'F'); 
 
-g.printGraph();
+// g.printGraph();
+g.bfs('A')
