@@ -1,8 +1,8 @@
 const Queue = require('../Queue');
-
+const Stack = require('../Stack');
 class Graph {
   constructor(size) {
-    // size, adjacent list 초기섲렁
+    // size, adjacent list 초기설정 
     this.size = size;
     this.adjList = new Map();
   }
@@ -48,8 +48,23 @@ class Graph {
     console.log(explored)
   }
 
+  // 깊이 우선 탐색
   dfs(startingNode) {
+    const s = new Stack();
+    const explored = new Set();
 
+    s.push(startingNode)
+    explored.add(startingNode)
+
+    while(!s.isEmpty()) {
+      const value = s.pop();
+      
+      this.adjList.get(value).filter(n => !explored.has(n)).forEach(n => {
+        explored.add(n);
+        s.push(n);
+      })
+    }
+    console.log(explored)
   }
 }
 
@@ -73,3 +88,4 @@ g.addEdge('C', 'F');
 
 // g.printGraph();
 g.bfs('A')
+g.dfs('A')
