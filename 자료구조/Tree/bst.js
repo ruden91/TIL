@@ -6,7 +6,11 @@ class BST {
     this.root = null;
   }
 
-  insert(data) {
+  insert(data = null) {
+    if (data === null) {
+      throw Error('정확한 데이터 값을 입력해주세요.');
+    }
+
     const node = this.getNode(data);
     if (!this.root) {
       this.root = node;
@@ -76,5 +80,7 @@ bst.insert(30);
 bst.insert(21);
 bst.insert(3);
 bst.insert(2);
+
+bst.insert();
 
 bst.printBST();
