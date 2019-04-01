@@ -20,28 +20,43 @@ class BST {
   }
 
   remove(data) {
-
+    this.root = this.removeNode(this.root, data)
   }
 
   // 중위순회
-  inorder() {
-
+  inorder(node) {
+    if (node !== null) {
+      this.inorder(node.left);
+      console.log(node.data);
+      this.inorder(node.right)
+    }
   }
 
   // 후위순회
-  postorder() {
-
+  postorder(node) {
+    if (node !== null) {
+      this.postorder(node.left);
+      this.postorder(node.right);
+      console.log(node.data);
+    }
   }
 
   // 전위순회
-  preorder() {
-
+  preorder(node) {
+    if (node !== null) {
+      console.log(node.data);
+      this.preorder(node.left);
+      this.preorder(node.right)
+    }
   }
   
   printBST() {
     console.log(JSON.stringify(this.root));
   }
   // helpers
+  getRootNode() {
+    return this.root;
+  }
   insertNode(node, newNode) {
     if (node.data < newNode.data) {
       // right
@@ -58,6 +73,21 @@ class BST {
         this.insertNode(node.left, newNode)        
       }
     }
+  }
+
+  removeNode(node, key) {
+    if (node === null) {
+      return null;
+    } else if(key < node.data) {
+      node.left = this.removeNode(node.left, key);
+      return node;
+    } else if (key > node.data) {
+      node.right = this.removeNode(node.right, key);
+      return node;
+    } else {
+      
+    }
+    
   }
 
   getNode(data) {
@@ -81,6 +111,9 @@ bst.insert(21);
 bst.insert(3);
 bst.insert(2);
 
-bst.insert();
 
-bst.printBST();
+// bst.printBST();
+const rootNode = bst.getRootNode();
+bst.inorder(rootNode);
+bst.preorder(rootNode);
+bst.postorder(rootNode);
