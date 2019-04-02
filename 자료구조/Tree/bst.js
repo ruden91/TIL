@@ -1,8 +1,8 @@
 /**
  * 이진 탐색 트리
- * 검색 O(n)
- * 추가 O(n)
- * 삭제 O(n)
+ * 검색 O(logn)
+ * 추가 O(logn)
+ * 삭제 O(logn)
  */
 class BST {
   constructor() {
