@@ -1,5 +1,8 @@
 /**
  * 이진 탐색 트리
+ * 검색 O(n)
+ * 추가 O(n)
+ * 삭제 O(n)
  */
 class BST {
   constructor() {
@@ -75,21 +78,46 @@ class BST {
     }
   }
 
-  removeNode(node, key) {
+  removeNode(node, data) {
+    // 에외처리
     if (node === null) {
-      return null;
-    } else if(key < node.data) {
-      node.left = this.removeNode(node.left, key);
       return node;
-    } else if (key > node.data) {
-      node.right = this.removeNode(node.right, key);
-      return node;
-    } else {
-      
     }
-    
+
+    if (node.data > data) {
+      node.left = this.removeNode(node.left, data);
+    } else if (node.data < data) {
+      node.right = this.removeNode(node.right, data);
+    } else {
+      // 3가지 조건
+      if (node.left === null && node.right === null) {
+        // child가 존재하지 않는 경우 해당 노드를 제거한다.
+        return null;
+      } else if (node.left === null) {
+        // left가 존재하지 않는 경우 right를 부모로 올려준다.
+        return node.right;
+      } else if (node.right === null) {
+        // right가 존재하지 않는 경우 left를 부모로 올려준다.
+        return node.left;
+      }
+
+      // child가 모두 존재하는 경우 최소값을 찾은 후 node.data에 복사한 후 복사 값의 원본 데이터를 삭제한다.
+      node.data = this.findMin(node.right);
+      node.left = this.removeNode(node.left, node.data);
+    }
+    return node; 
   }
 
+  findMin(node) {
+    let min = node.data;
+
+    while(node.left !== null) {
+      min = node.left.data;
+      node = node.left;
+    }
+
+    return min;
+  }
   getNode(data) {
     return {
       data,
@@ -102,18 +130,23 @@ class BST {
 const bst = new BST();
 
 
-bst.insert(5);
-bst.insert(7);
-bst.insert(2);
-bst.insert(14);
-bst.insert(30);
-bst.insert(21);
-bst.insert(3);
-bst.insert(2);
+bst.insert(15); 
+bst.insert(25); 
+bst.insert(10); 
+bst.insert(7); 
+bst.insert(22); 
+bst.insert(17); 
+bst.insert(13); 
+bst.insert(5); 
+bst.insert(9); 
+bst.insert(27); 
 
-
-// bst.printBST();
+bst.remove(17)
+bst.remove(5);
+bst.remove(22)
+bst.remove(27)
 const rootNode = bst.getRootNode();
+// console.log(rootNode)
 bst.inorder(rootNode);
-bst.preorder(rootNode);
-bst.postorder(rootNode);
+// bst.preorder(rootNode);
+// bst.postorder(rootNode);
