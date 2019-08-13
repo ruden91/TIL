@@ -1,91 +1,125 @@
-const Queue = require('../Queue');
-const Stack = require('../Stack');
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.adjacents = [];
+  }
+
+  addAdjacent(node) {
+    this.adjacents.push(node);
+  }
+
+  removeAdjacent(node) {
+    const index = this.adjacents.indexOf(node);
+
+    if (index > -1) {
+      this.adjacents.splice(index, 1);
+
+      return node;
+    }
+  }
+  getAdjacents() {
+    return this.adjacents;
+  }
+}
+
 class Graph {
-  constructor(size) {
-    // size, adjacent list 초기설정 
-    this.size = size;
-    this.adjList = new Map();
+  constructor(edgeDirection = Graph.DIRECTED) {
+    this.nodes = new Map();
+    this.edgeDirection = edgeDirection;
+    this.queue = [];
   }
 
-  // 그래프에 정점을 추가하는 메서드
-  addVertex(v) {
-    this.adjList.set(v, []);
+  addEdge(source, destination) {
+    const sourceNode = this.addVertex(source);
+    const destinationNode = this.addVertex(destination);
+
+    sourceNode.addAdjacent(destinationNode);
+
+    if (this.edgeDirection === Graph.UNDIRECTED) {
+      destinationNode.addAdjacent(sourceNode);
+    }
+
+    return [sourceNode, destinationNode];
   }
 
-  // 그래프에 엣지를 추가하는 메서드
-  addEdge(v, w) {
-    this.adjList.get(v).push(w);
-    this.adjList.get(w).push(v);
-  }
-
-  printGraph() {
-    const keys = this.adjList.keys();
-
-    for (let key of keys) {
-      const values = this.adjList.get(key);
-      const connectedValues = values.join('');
-      
-      console.log(`${key} -> ${connectedValues}`);
+  addVertex(value) {
+    if (this.nodes.has(value)) {
+      return this.nodes.get(value);
+    } else {
+      const vertex = new Node(value);
+      this.nodes.set(value, vertex);
+      return vertex;
     }
   }
 
-  // 너비 우선 탐색
-  bfs(startingNode) {
-    const q = new Queue();
-    let explored = new Set();
-    
-    q.enqueue(startingNode);
-    explored.add(startingNode);
+  removeVertex(value) {
+    const current = this.nodes.get(value);
 
-    while(!q.isEmpty()) {
-      const t = q.dequeue();
-      this.adjList.get(t).filter(n => !explored.has(n)).forEach(n => {
-        explored.add(n);
-        q.enqueue(n);
-      })
+    if (current) {
+      for (const node of this.nodes.values()) {
+        node.removeAdjacent(current);
+      }
     }
 
-    console.log(explored)
+    return this.nodes.delete(value);
   }
 
-  // 깊이 우선 탐색
-  dfs(startingNode) {
-    const s = new Stack();
-    const explored = new Set();
+  removeEdge(source, destination) {
+    const sourceNode = this.nodes.get(source);
+    const destinationNode = this.nodes.get(destination);
 
-    s.push(startingNode)
-    explored.add(startingNode)
+    if (sourceNode && destinationNode) {
+      sourceNode.removeAdjacent(destinationNode);
 
-    while(!s.isEmpty()) {
-      const value = s.pop();
-      
-      this.adjList.get(value).filter(n => !explored.has(n)).forEach(n => {
-        explored.add(n);
-        s.push(n);
-      })
+      if (this.edgeDirection === Graph.UNDIRECTED) {
+        destinationNode.removeAdjacent(sourceNode);
+      }
     }
-    console.log(explored)
+
+    return [sourceNode, destinationNode];
+  }
+
+  bfs(first) {
+    const visited = new Map();
+
+    this.queue.push(first);
+
+    while (this.queue.length > 0) {
+      const node = this.queue.shift();
+      console.log(this.queue);
+      if (node && !visited.get(node)) {
+        visited.set(node);
+        node.getAdjacents().forEach(n => this.queue.push(n));
+      }
+    }
   }
 }
 
-const vertices = [ 'A', 'B', 'C', 'D', 'E', 'F' ]; 
-const g = new Graph(vertices.length);
+Graph.DIRECTED = Symbol("directed graph");
+Graph.UNDIRECTED = Symbol("undirected graph");
 
-// 정점 추가
-for (let vertex of vertices) {
-  g.addVertex(vertex);
-}
+const graph = new Graph();
 
-// 엣지 추가
-g.addEdge('A', 'B'); 
-g.addEdge('A', 'D'); 
-g.addEdge('A', 'E'); 
-g.addEdge('B', 'C'); 
-g.addEdge('D', 'E'); 
-g.addEdge('E', 'F'); 
-g.addEdge('E', 'C'); 
-g.addEdge('C', 'F'); 
+const first = graph.addVertex(1);
+graph.addVertex(2);
+graph.addVertex(3);
+graph.addVertex(4);
+graph.addVertex(5);
+graph.addVertex(6);
+graph.addVertex(7);
+graph.addVertex(8);
+graph.addVertex(9);
+graph.addVertex(10);
 
-// g.printGraph();
-g.bfs('A')
-g.dfs('A')
+graph.addEdge(1, 2);
+graph.addEdge(1, 3);
+graph.addEdge(1, 4);
+graph.addEdge(2, 5);
+graph.addEdge(3, 6);
+graph.addEdge(3, 7);
+graph.addEdge(4, 8);
+graph.addEdge(5, 9);
+graph.addEdge(6, 10);
+// graph.removeVertex(5);
+
+console.log(graph.bfs(first));
